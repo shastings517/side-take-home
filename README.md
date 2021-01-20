@@ -1,3 +1,17 @@
+# Design Decision Notes
+
+This project was built with the latest stable version of Node 14.15.3.
+
+This project uses React.Suspense to utilize 'render-as-you-fetch' data fetching and React.lazy for lazy loading pages. I used these because they were mentioned in the Side senior front end engineer job description. React.Suspense is bleeding edge and is marked as experimental by the React team. As such, I might hesitate to use it in a production application, even though it does improve the developer experience. All pages in this project are lazy loaded. If a page requires fetching data (such as SavedListings and PropertyListings pages), the <Suspense> component will show a 'loading' fallback until the data is available. Currently there is no caching of fetched data so both the SavedListings and PropertyListings pages will initially trigger calls to the simplyRETS api. This could easily be improved in the future.
+
+I organized the directory structure around a `pages` folder that contains a page for each route in the project and a `components` folder that contains smaller components usedon each page. There is a `utils` folder that contains miscellaneous helper functions. All logic that has to do with fetching data is housed in the `api` folder. In order to utilize React.Suspense, some extra data fetching logic must be added (see `endpoints.js` and `wrapPromise.js`).
+
+For styling I leaned heavily on Material-UI's built in makeStyles hook. It is also possible to add our own css module styles (this is used in the App.js component for global style). Material-UI's Grid component is used for responsiveness across screen sizes.
+
+For testing both jest and react-testing-library are utilized. I leveraged react-testing-library on top of jest because it is part of the create-react-app bundle. Each component/page has a corresponding testing file in the same directory. I think this provides a bit more clarity/accessibility then having tests live in a separate folder. The tests rely on jsdom and mostly test that pages/components are present in the DOM when they should be. localStorage methods are mocked in App.tests.js (save userId) and Property.tests.js (save property logic) to test that these components are calling them correctly. Shared test helper functions are housed in `utils/testUtils.js`.
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
